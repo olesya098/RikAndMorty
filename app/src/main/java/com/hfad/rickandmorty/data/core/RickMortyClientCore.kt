@@ -20,9 +20,9 @@ class RickMortyClientCore {
             json(serializer)
         }
         install(io.ktor.client.plugins.HttpTimeout) {
-            requestTimeoutMillis = 30_000
-            connectTimeoutMillis = 30_000
-            socketTimeoutMillis = 30_000
+            requestTimeoutMillis = 70_000
+            connectTimeoutMillis = 70_000
+            socketTimeoutMillis = 70_000
         }
     }
 }

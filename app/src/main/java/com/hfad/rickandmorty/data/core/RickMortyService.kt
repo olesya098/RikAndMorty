@@ -3,6 +3,7 @@ package com.hfad.rickandmorty.data.core
 import android.R.attr.type
 import android.media.Image
 import android.util.Log
+import android.util.Log.e
 import com.hfad.rickandmorty.data.model.Location
 import com.hfad.rickandmorty.data.model.Origin
 import com.hfad.rickandmorty.data.model.Response
@@ -30,23 +31,25 @@ class RickMortyService {
         species: String? = null,
         gender: String? = null
     ): Response {
-        val response = client.get("$apiUrl/character") {
-            url {
-                parameters.append("page", page.toString())
-                name?.let { parameters.append("name", it) }
-                status?.let { parameters.append("status", it) }
-                species?.let { parameters.append("species", it) }
-                gender?.let { parameters.append("gender", it) }
+        try {
+            val response = client.get("$apiUrl/character") {
+                parameter("page", page)
+                name?.let { parameter("name", it) }
+                status?.let { parameter("status", it) }
+                species?.let { parameter("species", it) }
+                gender?.let { parameter("gender", it) }
             }
+
+            Log.d("RickMortyService", "Request URL: ${response.request.url}")
+            Log.d("RickMortyService", "Response status: ${response.status}")
+
+            return RickMortyClientCore.instance.serializer.decodeFromString<Response>(response.bodyAsText())
+
+        } catch (e: Exception) {
+            Log.e("RickMortyService", "Error in getHeroes: ${e.message}", e)
+            throw e
         }
-        Log.d("Service", "URL: ${response.request.url}")
-        Log.d("Service", "Status: ${response.status}")
-        Log.d("Service", "Response body: ${response.bodyAsText()}")
-
-        return RickMortyClientCore.instance.serializer.decodeFromString<Response>(response.bodyAsText())
-
     }
-
     suspend fun getHero(
         id: Int
     ): Results {
