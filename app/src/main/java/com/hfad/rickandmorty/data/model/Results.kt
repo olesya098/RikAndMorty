@@ -1,5 +1,8 @@
 package com.hfad.rickandmorty.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Results(
     val id: Int,
     val name: String,
@@ -10,7 +13,7 @@ data class Results(
     val origin: Origin,
     val location: Location,
     val image: String,
-    val episode: List<String>,
+    val episode: List<String> = listOf(),
     val url: String,
     val created: String
 )

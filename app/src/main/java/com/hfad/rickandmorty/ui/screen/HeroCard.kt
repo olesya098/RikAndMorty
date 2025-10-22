@@ -2,6 +2,7 @@ package com.hfad.rickandmorty.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,10 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.hfad.rickandmorty.data.model.Results
+import com.hfad.rickandmorty.ui.theme.aliveColor
 import com.hfad.rickandmorty.ui.theme.backgroundCard
 import com.hfad.rickandmorty.ui.theme.blueGradient
+import com.hfad.rickandmorty.ui.theme.deadColor
 import com.hfad.rickandmorty.ui.theme.pinkGradient
 import com.hfad.rickandmorty.ui.theme.purpleGradient
+import com.hfad.rickandmorty.ui.theme.unknownColor
 
 @Composable
 fun HeroCard(hero: Results) {
@@ -63,7 +67,6 @@ fun HeroCard(hero: Results) {
                     )
                 )
         ) {
-            // Индикатор Active в правом верхнем углу
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -73,19 +76,18 @@ fun HeroCard(hero: Results) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    // Зеленая точка
                     Box(
                         modifier = Modifier
                             .size(10.dp)
                             .background(
-                                color = Color(0xFF00FF88),
+                                color = if (hero.status == "unknown") unknownColor else if (hero.status == "Alive") aliveColor else deadColor,
                                 shape = CircleShape
                             )
                     )
                     Text(
-                        text = "Active",
+                        text = hero.status,
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFF00FF88),
+                        color = if (hero.status == "unknown") unknownColor else if (hero.status == "Alive") aliveColor else deadColor,
                         fontWeight = FontWeight.Medium,
                         fontSize = 12.sp
                     )
@@ -114,11 +116,56 @@ fun HeroCard(hero: Results) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Технические индикаторы
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Ваши индикаторы здесь
+                    Box(
+                        modifier = Modifier
+                            .border(
+                               width = 1.dp,
+                                color = Color.Blue.copy(alpha = 0.7f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                    ){
+                        Text(
+                            text = "unknown",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = blueGradient
+                        )
+
+                    }
+                    Box(
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = Color.Blue.copy(alpha = 0.7f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                    ){
+                        Text(
+                            text = "unknown",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = blueGradient
+                        )
+
+                    }
+                    Box(
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = Color.Blue.copy(alpha = 0.7f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                    ){
+                        Text(
+                            text = "unknown",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = blueGradient
+                        )
+
+                    }
+
+
                 }
             }
         }

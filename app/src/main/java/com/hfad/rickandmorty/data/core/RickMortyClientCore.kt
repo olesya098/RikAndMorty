@@ -10,7 +10,7 @@ class RickMortyClientCore {
     companion object{
         val instance: RickMortyClientCore = RickMortyClientCore()
     }
-    private val serializer = Json {
+    val serializer = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
     }

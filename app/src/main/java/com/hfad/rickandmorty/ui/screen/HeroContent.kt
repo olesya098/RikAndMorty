@@ -24,13 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hfad.rickandmorty.ui.viewmodel.HeroViewModel
 import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HeroContent(viewModel: HeroViewModel) {
-    val heroes = viewModel.heroes.collectAsState().value
-    val isLoading = viewModel.isLoading.collectAsState().value
-    val error = viewModel.error.collectAsState().value
+fun HeroContent(heroViewModel: HeroViewModel) {
+    val heroes = heroViewModel.heroes.collectAsState().value
+    val isLoading = heroViewModel.isLoading.collectAsState().value
+    val error = heroViewModel.error.collectAsState().value
 
     val snackbarHostState = remember { SnackbarHostState() }
 

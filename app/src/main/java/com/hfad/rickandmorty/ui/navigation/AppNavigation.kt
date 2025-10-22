@@ -1,26 +1,18 @@
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
+package com.hfad.rickandmorty.ui.navigation
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.Firebase
 import com.hfad.rickandmorty.ui.screen.HeroContent
 import com.hfad.rickandmorty.ui.viewmodel.HeroViewModel
 import kotlinx.serialization.Serializable
-import okhttp3.Route
 
 class Navigator {
     private var navController: NavController? = null

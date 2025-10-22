@@ -26,14 +26,18 @@ class RickMortyService {
         species: String? = null,
         gender: String? = null
     ): Response {
+
         return client.get("$apiUrl/character") {
-            parameter("page", page)
-            name?.let { parameter("name", it) }
-            status?.let { parameter("status", it) }
-            species?.let { parameter("species", it) }
-            gender?.let { parameter("gender", it) }
+            url {
+                parameters.append("page", page.toString())
+                name?.let { parameters.append("name", it) }
+                status?.let { parameters.append("status", it) }
+                species?.let { parameters.append("species", it) }
+                gender?.let { parameters.append("gender", it) }
+            }
         }.body()
     }
+
 
     suspend fun getHero(
         id: Int
@@ -41,24 +45,22 @@ class RickMortyService {
         return client.get("$apiUrl/character/$id").body()
     }
 
-suspend fun getAllHero(): List<Results> {
-    val allHeroes = mutableListOf<Results>()
-    var page = 1
-    var totalPages = 1
+    suspend fun getAllHero(): List<Results> {
+        val allHeroes = mutableListOf<Results>()
+        var page = 1
+        var totalPages = 1
 
-    try {
-        while (page <= totalPages) {
-            val response = getHeroes(page = page)
-            allHeroes.addAll(response.results)
-            totalPages = response.info.pages
-            page++
+        try {
+            while (page <= totalPages) {
+                val response = getHeroes(page = page)
+                allHeroes.addAll(response.results)
+                totalPages = response.info.pages
+                page++
+            }
+        } catch (e: Exception) {
+            // Обработка ошибок
+            e.printStackTrace()
         }
-    } catch (e: Exception) {
-        // Обработка ошибок
-        e.printStackTrace()
+        return allHeroes
     }
-
-    return allHeroes
-}
-
 }
