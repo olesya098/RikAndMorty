@@ -2,6 +2,7 @@ package com.hfad.rickandmorty.data.core
 
 import android.R.attr.type
 import android.media.Image
+import android.util.Log
 import com.hfad.rickandmorty.data.model.Location
 import com.hfad.rickandmorty.data.model.Origin
 import com.hfad.rickandmorty.data.model.Response
@@ -12,8 +13,11 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
+import io.ktor.client.statement.request
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import kotlinx.serialization.builtins.serializer
 
 class RickMortyService {
     private val client = RickMortyClientCore.instance.client
@@ -26,8 +30,7 @@ class RickMortyService {
         species: String? = null,
         gender: String? = null
     ): Response {
-
-        return client.get("$apiUrl/character") {
+        val response = client.get("$apiUrl/character") {
             url {
                 parameters.append("page", page.toString())
                 name?.let { parameters.append("name", it) }
@@ -35,9 +38,14 @@ class RickMortyService {
                 species?.let { parameters.append("species", it) }
                 gender?.let { parameters.append("gender", it) }
             }
-        }.body()
-    }
+        }
+        Log.d("Service", "URL: ${response.request.url}")
+        Log.d("Service", "Status: ${response.status}")
+        Log.d("Service", "Response body: ${response.bodyAsText()}")
 
+        return RickMortyClientCore.instance.serializer.decodeFromString<Response>(response.bodyAsText())
+
+    }
 
     suspend fun getHero(
         id: Int
@@ -58,7 +66,6 @@ class RickMortyService {
                 page++
             }
         } catch (e: Exception) {
-            // Обработка ошибок
             e.printStackTrace()
         }
         return allHeroes

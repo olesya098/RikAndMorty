@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hfad.rickandmorty.ui.screen.HeroContent
 import com.hfad.rickandmorty.ui.viewmodel.HeroViewModel
-import kotlinx.serialization.Serializable
 
 class Navigator {
     private var navController: NavController? = null
@@ -35,20 +34,12 @@ class Navigator {
             popUpTo(popBackRoute) { inclusive = true }
         }
     }
-
-    fun currentRoute(): String? {
-        return navController?.currentBackStackEntry?.destination?.route//текущий путь
-    }
-
-
 }
 
 val LocalNavigator = staticCompositionLocalOf<Navigator> {
     error("No navigation")
 }
 
-@Serializable
-object HeroContent
 
 @Composable
 fun AppNavigation() {
@@ -65,10 +56,10 @@ fun AppNavigation() {
     ) {
         NavHost(
             navController = navController,
-            startDestination = HeroContent
+            startDestination = Routes.HEROCONTENT
         ) {
 
-            composable(route = HeroContent.toString()) {
+            composable(route = Routes.HEROCONTENT) {
                 HeroContent(
                     heroViewModel
                 )

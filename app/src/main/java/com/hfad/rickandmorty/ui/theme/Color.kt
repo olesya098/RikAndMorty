@@ -11,6 +11,8 @@ val purpleGradient = Color(0xFF9D4EDD).copy(alpha = 0.5f)
 val pinkGradient = Color(0xFFFF006E).copy(alpha = 0.5f)
 val backgroundCard = Color(0xFF0A0E17)
 
+val background2 = Color(0xFF4D4C4C)
+
 val unknownColor = Color(0xFF565656)
 val aliveColor = Color(0xFF00FF88)
 val deadColor = Color(0xFFE91E3C)

@@ -42,15 +42,25 @@ class HeroViewModel : ViewModel() {
                 val response = repository.getHeroes(page, name, status, species, gender)
                 _heroes.value = response.results
             } catch (e: IOException) {
+
                 _error.value = "Network error: ${e.message}"
+
                 Log.e("My", "Network error", e)
+
             } catch (e: HttpRequestTimeoutException) {
+
                 _error.value = "Request timeout. Please try again."
+
                 Log.e("My", "Timeout error", e)
+
             } catch (e: Exception) {
+
                 _error.value = "Error: ${e.message}"
+
                 Log.e("My", "General error", e)
+
             } finally {
+
                 _isLoading.value = false
             }
         }
