@@ -12,7 +12,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
 
+private data class RequestParams(//класс для хранения кэшированных данных
+    val page: Int,
+    val name: String?,
+    val status: String?,
+    val species: String?,
+    val gender: String?
+)
+
 class HeroViewModel : ViewModel() {
+
     private val repository = HeroRepository()
 
     private val _heroes = MutableStateFlow<List<Results>>(emptyList())
@@ -24,10 +33,21 @@ class HeroViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
 
+
+    // Кэш для хранения данных
+    private var dataCache: List<Results>? = null
+
+    // Кэш для параметров запроса
+    private var lastRequestParams: RequestParams? = null
+
+    // Сохранение данных в кэш
+    private fun setDataToCache(data: List<Results>) {
+        dataCache = data
+    }
+
     init {
         loadHero()
     }
-
     fun loadHero(
         page: Int = 1,
         name: String? = null,
@@ -35,32 +55,59 @@ class HeroViewModel : ViewModel() {
         species: String? = null,
         gender: String? = null
     ) {
+        val currentParams = RequestParams(page, name, status, species, gender)
+
+        // Если параметры не изменились и есть кэшированные данные, используем кэш
+        if (currentParams == lastRequestParams && dataCache != null) {
+            _heroes.value = dataCache!!
+            _error.value = null
+            return
+        }
+
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
             try {
                 val response = repository.getHeroes(page, name, status, species, gender)
-                _heroes.value = response.results
+                val heroesList = response.results
+
+                // Сохраняем данные в кэш
+                setDataToCache(heroesList)
+                lastRequestParams = currentParams
+
+                _heroes.value = heroesList
+
             } catch (e: IOException) {
-
-                _error.value = "Network error: ${e.message}"
-
-                Log.e("My", "Network error", e)
-
+                // При ошибке сети пытаемся использовать кэшированные данные
+                if (dataCache != null) {
+                    _heroes.value = dataCache!!
+                    _error.value = "Network error. Showing cached data. ${e.message}"
+                    Log.w("My", "Network error, showing cached data", e)
+                } else {
+                    _error.value = "Network error: ${e.message}"
+                    Log.e("My", "Network error, no cached data available", e)
+                }
             } catch (e: HttpRequestTimeoutException) {
-
-                _error.value = "Request timeout. Please try again."
-
-                Log.e("My", "Timeout error", e)
-
+                // При таймауте также пытаемся использовать кэш
+                if (dataCache != null) {
+                    _heroes.value = dataCache!!
+                    _error.value = "Request timeout. Showing cached data."
+                    Log.w("My", "Timeout error, showing cached data", e)
+                } else {
+                    _error.value = "Request timeout. Please try again."
+                    Log.e("My", "Timeout error, no cached data available", e)
+                }
             } catch (e: Exception) {
-
-                _error.value = "Error: ${e.message}"
-
-                Log.e("My", "General error", e)
-
+                // При других ошибках также пытаемся использовать кэш
+                if (dataCache != null) {
+                    _heroes.value = dataCache!!
+                    _error.value = "Error. Showing cached data. ${e.message}"
+                    Log.w("My", "General error, showing cached data", e)
+                } else {
+                    _error.value = "Error: ${e.message}"
+                    Log.e("My", "General error, no cached data available", e)
+                }
             } finally {
-
                 _isLoading.value = false
             }
         }
