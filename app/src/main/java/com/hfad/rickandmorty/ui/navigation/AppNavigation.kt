@@ -7,10 +7,13 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.hfad.rickandmorty.ui.screen.HeroContent
+import androidx.navigation.navArgument
+import com.hfad.rickandmorty.ui.screen.heroCard.HeroCard
+import com.hfad.rickandmorty.ui.screen.heroesCard.HeroContent
 import com.hfad.rickandmorty.ui.viewmodel.HeroViewModel
 
 class Navigator {
@@ -25,6 +28,12 @@ class Navigator {
     ) {
         navController?.navigate(route)
     }
+
+    fun navigateToHeroCard(heroId: Int) {
+        navigate(Routes.createHeroRoute(heroId))
+
+    }
+
 
     fun navigateWithBack(
         route: String,
@@ -62,6 +71,25 @@ fun AppNavigation() {
             composable(route = Routes.HEROCONTENT) {
                 HeroContent(
                     heroViewModel
+                )
+
+            }
+            composable(
+                route = Routes.HEROCARD,
+                arguments = listOf(
+                    navArgument("heroId") { type = NavType.IntType }
+                )
+            ) { backStackEntry -> //текущий маршрут
+                val heroId = backStackEntry.arguments?.getInt("heroId") ?: 0
+                HeroCard(
+                    heroId = heroId,
+                    heroViewModel = heroViewModel,
+                    onBackClick = {
+                        navigator.navigateWithBack(
+                            Routes.HEROCARD,
+                            Routes.HEROCONTENT,
+                        )
+                    }
                 )
 
             }

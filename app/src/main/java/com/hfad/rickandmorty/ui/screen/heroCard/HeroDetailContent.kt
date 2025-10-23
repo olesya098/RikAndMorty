@@ -1,12 +1,10 @@
-package com.hfad.rickandmorty.ui.screen
+package com.hfad.rickandmorty.ui.screen.heroCard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,16 +34,15 @@ import coil.compose.rememberAsyncImagePainter
 import com.hfad.rickandmorty.data.model.Results
 import com.hfad.rickandmorty.ui.theme.aliveColor
 import com.hfad.rickandmorty.ui.theme.backgroundCard
-import com.hfad.rickandmorty.ui.theme.blue
 import com.hfad.rickandmorty.ui.theme.blueGradient
 import com.hfad.rickandmorty.ui.theme.deadColor
-import com.hfad.rickandmorty.ui.theme.pink
 import com.hfad.rickandmorty.ui.theme.pinkGradient
 import com.hfad.rickandmorty.ui.theme.purpleGradient
 import com.hfad.rickandmorty.ui.theme.unknownColor
 
+
 @Composable
-fun HeroesCard(hero: Results) {
+fun HeroDetailContent(hero: Results, modifier: Modifier = Modifier) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -129,50 +126,19 @@ fun HeroesCard(hero: Results) {
                             fontWeight = FontWeight.Medium,
                             fontSize = 10.sp
                         )
+                        Text(
+                            text = hero.status,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (hero.status == "Alive") aliveColor else if (hero.status == "unknown") unknownColor else deadColor,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
-
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    maxItemsInEachRow = 3
-                ) {
-                    Chip(
-                        text = hero.species,
-                        color = blue
-                    )
-                    Chip(
-                        text = hero.gender,
-                        color = pink
-                    )
-                }
             }
         }
     }
-}
 
-@Composable
-fun Chip(text: String, color: Color) {
-    Box(
-        modifier = Modifier
-            .background(
-                color = color.copy(alpha = 0.2f),
-                shape = RoundedCornerShape(12.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = color.copy(alpha = 0.5f),
-                shape = RoundedCornerShape(12.dp)
-            )
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelSmall,
-            color = color,
-            fontWeight = FontWeight.Medium,
-            fontSize = 10.sp
-        )
-    }
 }

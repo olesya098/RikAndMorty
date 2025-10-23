@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.hfad.rickandmorty.ui.navigation.AppNavigation
+import com.hfad.rickandmorty.ui.screen.heroesCard.HeroesCard
 import com.hfad.rickandmorty.ui.theme.RickAndMortyTheme
 import com.hfad.rickandmorty.ui.theme.background2
 

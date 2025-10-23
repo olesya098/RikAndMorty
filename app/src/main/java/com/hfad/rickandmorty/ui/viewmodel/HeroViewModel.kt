@@ -48,6 +48,11 @@ class HeroViewModel : ViewModel() {
     init {
         loadHero()
     }
+
+    fun getHeroById(heroId: Int): Results? {
+        return _heroes.value.find { it.id == heroId }
+    }
+
     fun loadHero(
         page: Int = 1,
         name: String? = null,
